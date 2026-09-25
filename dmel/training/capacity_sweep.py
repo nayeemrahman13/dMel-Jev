@@ -179,20 +179,22 @@ def aggregate(widths: list[int], seeds: list[int], out_dir: Path) -> dict:
         per_run[width] = {}
         for seed in seeds:
             path = out_dir / f"w{width}_seed{seed}" / "metrics.json"
+            # metrics.json is the flat harness metrics dict; run_shard merges the
+            # run meta (checkpoint, params, selected_stop_threshold) into .meta.
             per_run[width][seed] = json.loads(path.read_text())
 
     widths_summary: dict[int, dict] = {}
     for width in widths:
         runs = per_run[width]
-        metrics = [run["metrics"] for run in runs.values()]
-        params = sorted({run["params"] for run in runs.values()})
+        metrics = list(runs.values())
+        params = sorted({run["meta"]["params"] for run in runs.values()})
         if len(params) != 1:
             raise ValueError(f"w{width}: inconsistent param counts across seeds: {params}")
         widths_summary[width] = {
             "params": params[0],
             "seeds": sorted(runs),
             "selected_stop_thresholds": sorted(
-                {run["selected_stop_threshold"] for run in runs.values()}
+                {run["meta"]["selected_stop_threshold"] for run in runs.values()}
             ),
             "interruption_recall": _mean_sd(
                 [_rate(m, "interruptions", "recall") for m in metrics]
@@ -211,6 +213,20 @@ def aggregate(widths: list[int], seeds: list[int], out_dir: Path) -> dict:
             ),
             "decision_latency_p95_ms": _mean_sd(
                 [_rate(m, "interruptions", "decision_latency_ms", "p95") for m in metrics]
+            ),
+            # Censoring per the harness: never-stopped events are censored at
+            # infinity, and a quantile anchored in that tail is None, not a
+            # finite number. Surface the counts so dashes are explainable.
+            "decision_latency_n_handled": _mean_sd(
+                [_rate(m, "interruptions", "decision_latency_ms", "n_handled") for m in metrics]
+            ),
+            "decision_latency_n_censored": _mean_sd(
+                [_rate(m, "interruptions", "decision_latency_ms", "n_censored") for m in metrics]
+            ),
+            "decision_latency_median_censored_seeds": sum(
+                1
+                for m in metrics
+                if _rate(m, "interruptions", "decision_latency_ms", "median_censored")
             ),
             "stop_decision_fbeta": _mean_sd(
                 [_rate(m, "stop_decision", "fbeta") for m in metrics]
@@ -245,15 +261,15 @@ def aggregate(widths: list[int], seeds: list[int], out_dir: Path) -> dict:
         "per_run": {
             str(w): {
                 str(s): {
-                    "params": per_run[w][s]["params"],
-                    "selected_stop_threshold": per_run[w][s]["selected_stop_threshold"],
-                    "interruption_recall": _rate(per_run[w][s]["metrics"], "interruptions", "recall"),
-                    "stop_decision_fbeta": _rate(per_run[w][s]["metrics"], "stop_decision", "fbeta"),
+                    "params": per_run[w][s]["meta"]["params"],
+                    "selected_stop_threshold": per_run[w][s]["meta"]["selected_stop_threshold"],
+                    "interruption_recall": _rate(per_run[w][s], "interruptions", "recall"),
+                    "stop_decision_fbeta": _rate(per_run[w][s], "stop_decision", "fbeta"),
                     "decision_latency_median_ms": _rate(
-                        per_run[w][s]["metrics"], "interruptions", "decision_latency_ms", "median"
+                        per_run[w][s], "interruptions", "decision_latency_ms", "median"
                     ),
                     "decision_latency_p95_ms": _rate(
-                        per_run[w][s]["metrics"], "interruptions", "decision_latency_ms", "p95"
+                        per_run[w][s], "interruptions", "decision_latency_ms", "p95"
                     ),
                 }
                 for s in seeds
@@ -269,11 +285,13 @@ def aggregate(widths: list[int], seeds: list[int], out_dir: Path) -> dict:
         return f"{stat['mean']:.{nd}f} ± {stat['sd']:.{nd}f}"
 
     lines = [
-        "| Metric (validation, mean ± sd over seeds) | 6×256 | 6×384 | 6×512 |",
-        "|---|---|---|---|",
-        f"| Parameters | {widths_summary[widths[0]]['params']:,} "
-        f"| {widths_summary[widths[1]]['params']:,} "
-        f"| {widths_summary[widths[2]]['params']:,} |",
+        "| Metric (validation, mean ± sd over seeds) | "
+        + " | ".join(f"6×{w}" for w in widths)
+        + " |",
+        "|" + "---|" * (len(widths) + 1),
+        "| Parameters | "
+        + " | ".join(f"{widths_summary[w]['params']:,}" for w in widths)
+        + " |",
     ]
     rows = [
         ("First in-window STOP recall", "interruption_recall", 3),
