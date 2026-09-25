@@ -26,7 +26,7 @@ from dataclasses import replace
 import numpy as np
 import torch
 
-from dmel.models.config import DmelModelConfig
+from dmel.models.config import DmelModelConfig, ModelConfig
 from dmel.models.model import build_model
 from dmel.models.policy import CheckpointedBargeInPolicy
 
@@ -105,15 +105,28 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--steps", type=int, default=300)
     parser.add_argument("--assert-budget", action="store_true")
     parser.add_argument("--budget-ms", type=float, default=BUDGET_MS)
+    # Capacity sweep: width and its necessary scalars (head_dim preserved at
+    # d_model/nhead; FFN keeps the baseline 2.5x ratio). Defaults are the
+    # committed 6x256 baseline.
+    parser.add_argument("--d-model", type=int, default=256)
+    parser.add_argument("--nhead", type=int, default=8)
+    parser.add_argument("--dim-feedforward", type=int, default=640)
     args = parser.parse_args(argv)
 
     torch.set_num_threads(1)
-    config = DmelModelConfig()
+    config = DmelModelConfig(
+        model=ModelConfig(
+            d_model=args.d_model,
+            nhead=args.nhead,
+            dim_feedforward=args.dim_feedforward,
+        )
+    )
     calibration = machine_calibration_seconds()
     results = bench_all(args.arms, config, n_steps=args.steps)
     report = {
         "calibration_matmul_s": calibration,
         "budget_ms": args.budget_ms,
+        "config": {"d_model": args.d_model, "nhead": args.nhead, "dim_feedforward": args.dim_feedforward},
         "arms": results,
     }
     print(json.dumps(report, indent=2))

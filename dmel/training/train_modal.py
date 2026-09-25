@@ -54,7 +54,9 @@ app = modal.App("dmel-jev-training", image=train_image)
     gpu="L4",
     region=REGION,
     volumes={"/runs": runs_volume, "/data": data_volume},
-    timeout=6 * MINUTES,
+    # Pilot-scale ceiling (cache materialization + 5 epochs x 3 seeds), not a
+    # reservation — Modal bills actual usage. A hung run burns at most this.
+    timeout=150 * MINUTES,
 )
 class DmelTrainer:
     @modal.method()
@@ -69,6 +71,10 @@ class DmelTrainer:
         max_train_batches: int | None,
         out_dir: str,
         generate_synthetic: bool,
+        d_model: int = 256,
+        nhead: int = 8,
+        dim_feedforward: int = 640,
+        seed: int | None = None,
     ) -> dict:
         import sys
 
@@ -101,7 +107,17 @@ class DmelTrainer:
         summary = run_training(
             DmelModelConfig(
                 features=features,
-                model=replace(base.model, arm=arm),
+                # Capacity sweep: width and its necessary scalars only
+                # (heads keep head_dim = d_model/nhead; FFN keeps the 2.5x
+                # ratio; step_proj scales with d_model automatically). The
+                # frontend (vocab 1280, 400 tokens/step) never changes.
+                model=replace(
+                    base.model,
+                    arm=arm,
+                    d_model=d_model,
+                    nhead=nhead,
+                    dim_feedforward=dim_feedforward,
+                ),
                 policy=base.policy,
                 loss_weights=base.loss_weights,
             ),
@@ -109,6 +125,7 @@ class DmelTrainer:
             OptimConfig(epochs=epochs, seeds=seeds, batch_size=batch_size, lr=lr, num_workers=2),
             Path(out_dir),
             max_train_batches=max_train_batches,
+            seeds_list=None if seed is None else [seed],
         )
         return summary
 
@@ -124,6 +141,10 @@ def main(
     lr: float = 3e-4,
     max_train_batches: int | None = None,
     out_dir: str = "/runs/smoke",
+    d_model: int = 256,
+    nhead: int = 8,
+    dim_feedforward: int = 640,
+    seed: int | None = None,  # set to train ONE (width, seed) for the capacity sweep
 ) -> None:
     trainer = DmelTrainer()
     summary = trainer.train.remote(
@@ -136,5 +157,9 @@ def main(
         max_train_batches=max_train_batches,
         out_dir=out_dir,
         generate_synthetic=generate_synthetic,
+        d_model=d_model,
+        nhead=nhead,
+        dim_feedforward=dim_feedforward,
+        seed=seed,
     )
     print(json.dumps(summary, indent=2))
