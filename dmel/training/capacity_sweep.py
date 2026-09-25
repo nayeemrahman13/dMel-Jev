@@ -172,7 +172,7 @@ def _rate(metrics: dict, *path: str) -> float | None:
     return node if isinstance(node, (int, float)) else None
 
 
-def aggregate(runs_root: Path, widths: list[int], seeds: list[int], out_dir: Path) -> dict:
+def aggregate(widths: list[int], seeds: list[int], out_dir: Path) -> dict:
     """Per-width mean +- sd over seeds, from the per-run metrics.json files."""
     per_run: dict[int, dict[int, dict]] = {}
     for width in widths:
@@ -317,17 +317,27 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out-dir", default="runs/capacity_sweep/eval")
     parser.add_argument("--aggregate", action="store_true", help="pool metrics.json into mean ± sd")
     parser.add_argument("--keep-split-dir", action="store_true", help="keep the symlinked split tree")
+    parser.add_argument(
+        "--reuse-split-dir",
+        action="store_true",
+        help="skip re-materializing the symlink tree when it already exists — "
+        "required when several driver processes evaluate concurrently "
+        "(a concurrent rebuild would pull links out from under a running eval)",
+    )
     args = parser.parse_args(argv)
 
     out_dir = Path(args.out_dir)
     if args.aggregate:
-        aggregate(Path(args.runs_root), args.widths, args.seeds, out_dir)
+        aggregate(args.widths, args.seeds, out_dir)
         print(f"wrote {out_dir / 'aggregate.json'} and {out_dir / 'aggregate_table.md'}")
         return 0
 
     data_root = Path(args.data_root)
     split_dir = data_root.parent / f"{data_root.name}-{args.split}"
-    materialize_split_dir(data_root, args.split, split_dir)
+    if args.reuse_split_dir and split_dir.is_dir():
+        print(f"reusing split dir {split_dir}", flush=True)
+    else:
+        materialize_split_dir(data_root, args.split, split_dir)
     thresholds = [float(t) for t in args.thresholds.split(",") if t.strip()]
 
     for width in args.widths:
