@@ -1,0 +1,6 @@
+# dmel/eval dependencies (contract: declare deps here, never touch the root pyproject).
+# Minimums align with the shared pin file dmel/constraints.txt (data-area owned);
+# constraints.txt is authoritative when the two disagree.
+numpy>=1.26
+pandas>=2.0
+pyarrow>=14.0

@@ -1,0 +1,16 @@
+# dmel/features area dependencies (contract: declare deps area-locally).
+#
+# Contract v1: all areas install from the shared corpus pin file so arms train
+# on comparable versions:
+#
+#   pip install -r dmel/features/requirements.txt -c dmel/constraints.txt
+#
+# dmel/constraints.txt is created by the data PR (read-only for this area).
+# Until it lands, the loose ranges below govern; once present, -c tightens them.
+#
+# The dev environment is provisioned by the root pyproject.toml; these are the
+# imports this package actually needs.
+numpy>=2.0
+PyYAML>=6.0
+# test-only
+pytest>=8.0

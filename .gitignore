@@ -1,0 +1,24 @@
+.venv/
+.venv*/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+.DS_Store
+.idea/
+.vscode/
+*.log
+out/
+runs/
+
+# dmel — bulk audio never committed (pilot/main corpora are reproduced with
+# python -m dmel.data.generate --preset <name>; fixtures ARE committed)
+data/pilot/
+data/main/

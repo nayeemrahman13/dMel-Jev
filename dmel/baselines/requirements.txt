@@ -1,0 +1,9 @@
+# Arm A runtime deps. Version floors are governed by the shared pin file
+# dmel/constraints.txt; the == pins below are known-good versions for the
+# reproducibility claim.
+onnxruntime==1.24.3
+numpy==2.2.4
+# Offline runner reads the per-frame agent_speaking label column (parquet).
+pyarrow==25.0.1
+# Committed-asset tests load WAVs through the vendored dmel.runtime Pcm.
+soundfile>=0.12

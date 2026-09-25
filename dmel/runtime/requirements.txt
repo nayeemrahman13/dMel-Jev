@@ -1,0 +1,10 @@
+# Vendored runtime pieces (dmel.runtime) — PCM helpers, espeak-ng TTS
+# adapter, Silero VAD v5 ONNX wrapper. Version floors come from the shared
+# pin file (contract v1).
+-c ../constraints.txt
+
+# PCM WAV loading (dmel.runtime.audio)
+soundfile>=0.12
+
+# Silero VAD inference (dmel.runtime.silero)
+onnxruntime>=1.17

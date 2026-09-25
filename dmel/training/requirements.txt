@@ -1,0 +1,19 @@
+# dMel models/training dependencies.
+#
+# Install (CPU torch for tests and the local smoke) — contract v1: versions
+# must be capped by the shared pin file dmel/constraints.txt (created by the
+# data PR; read-only here) so arms train on comparable versions:
+#   python -m venv .venv-dmel && .venv-dmel/bin/pip install \
+#       --extra-index-url https://download.pytorch.org/whl/cpu \
+#       -c dmel/constraints.txt \
+#       -r dmel/training/requirements.txt
+# GPU runs run on Modal via dmel/training/train_modal.py (image pinned there).
+
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+torch>=2.6
+numpy==2.2.4
+pandas>=2.2
+pyarrow>=18.0
+pyyaml>=6.0.1
+pytest==8.3.5
