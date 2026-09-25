@@ -1,0 +1,50 @@
+# Default training config for the learned barge-in policies (arms B and C).
+#
+# features/model/policy/loss_weights form the DmelModelConfig embedded in
+# every checkpoint; data/optim/out_dir drive the training loop only.
+# Feature values must match the dMel features precompute config.
+
+features:
+  token_vocab_size: 1280  # 80 bin-groups x 16 levels (4-bit); per-bin quantization
+  tokens_per_step: 400    # 5 mel subframes x 80 bin-groups per 50 ms step
+
+model:
+  arm: transformer        # transformer (arm C) | lstm (arm B)
+  d_model: 256
+  lstm_layers: 2
+  transformer_layers: 6
+  nhead: 8
+  dim_feedforward: 640
+  dropout: 0.1
+  use_speaker_similarity: false   # arm D plumbing — untrained in V1
+  use_agent_stem_dmel: false      # arm E plumbing — untrained in V1
+
+policy:
+  context_steps: 40       # 40 x 50 ms = 2 s rolling window
+  stop_threshold: 0.5
+  latch: true
+
+loss_weights:              # contract: action strictly dominates
+  action: 1.0
+  interrupt_intent: 0.3
+  backchannel: 0.2
+  speech_present: 0.1
+  primary_user: 0.1
+
+data:
+  root: data/pilot
+  window_steps: 40
+  sampler: balanced_stop   # reweight STOP-containing windows to ~50% of batches
+  # Split assignment comes from the shard manifest "split" column (v1):
+  # train on train, select on val; test is never touched here.
+
+optim:
+  seeds: 3                 # v1: every learned arm trains >= 3 seeds (mean +- sd)
+  epochs: 5
+  batch_size: 32
+  lr: 3.0e-4
+  weight_decay: 0.01
+  grad_clip: 1.0
+  num_workers: 2
+
+out_dir: runs/dmel

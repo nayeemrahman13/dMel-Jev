@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dmel-jev"
+version = "0.1.0"
+description = "Learned barge-in control for voice agents — dMel POC (deterministic corpus, tokenizer, policies, eval)"
+requires-python = ">=3.12"
+dependencies = [
+  "numpy==2.2.4",
+  "pandas>=2.2",
+  "pyarrow>=18.0",
+  "onnxruntime==1.24.3",
+  "soundfile==0.13.1",
+  "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+# Learned arms (torch). CPU wheels: pip install -e .[torch] --extra-index-url https://download.pytorch.org/whl/cpu
+torch = ["torch>=2.6"]
+dev = ["pytest==8.3.5"]
+modal = ["modal>=1.0"]
+
+# dmel is a source-checkout implicit-namespace package — no packages.find.
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["dmel"]

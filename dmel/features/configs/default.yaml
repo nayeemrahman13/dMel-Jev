@@ -1,0 +1,28 @@
+# dMel feature config (dmel/features) — loaded by dmel.features.config.DmelConfig.
+# Contract defaults: 16 kHz int16, 25 ms window / 10 ms hop mel, 50 ms steps.
+#
+# Token math for downstream consumers (models task):
+#   n_levels        = 2 ** quant_bits                      = 16
+#   n_groups        = n_mels / bins_per_group              = 80
+#   tokens_per_step = (step_ms / hop_ms) * n_groups        = 400
+#   vocab_size      = n_groups * n_levels                  = 1280
+# Token value = group_index * n_levels + level; position within a step encodes
+# (subframe, bin-group). Keep vocab_size in sync if you override these fields.
+
+sample_rate_hz: 16000
+window_ms: 25.0
+hop_ms: 10.0
+step_ms: 50
+
+n_mels: 80
+n_fft: 512
+fmin_hz: 0.0
+fmax_hz: null        # null -> Nyquist
+window: hann
+
+quant_bits: 4
+mel_min_db: -70.0
+mel_max_db: 50.0
+log_eps: 1.0e-10
+
+bins_per_group: 1

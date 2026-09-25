@@ -1,0 +1,356 @@
+{
+  "codec_family": {
+    "eval_only": true,
+    "key": "sample id (pair id for censored pairs \u2014 keeps the shared prefix identical)",
+    "rate": 0.5
+  },
+  "counts": {
+    "agent_runs_distribution": {
+      "1": 8
+    },
+    "by_scenario": {
+      "backchannel": 1,
+      "background_speaker": 1,
+      "hesitation": 2,
+      "hesitation_commit": 1,
+      "interruption": 1,
+      "noise": 1,
+      "normal_turn": 1
+    },
+    "by_split": {
+      "test": 5,
+      "train": 1,
+      "val": 2
+    },
+    "by_world": {
+      "none": 6,
+      "truncated": 2
+    },
+    "samples_total": 8
+  },
+  "determinism": {
+    "command": "python -m dmel.data.generate --preset fixtures",
+    "espeak": "eSpeak NG text-to-speech: 1.52.0  Data at: /usr/lib/x86_64-linux-gnu/espeak-ng-data",
+    "note": "identical CLI args + seed produce byte-identical outputs"
+  },
+  "noise_events": {
+    "kinds": [
+      "cough",
+      "breath",
+      "burst"
+    ],
+    "source": "numpy shaped-noise synthesis (no CC0 pack fetched)"
+  },
+  "preset": {
+    "censored_pairs": 1,
+    "forced_worlds": {
+      "hesitation_commit": "truncated",
+      "interruption": "truncated"
+    },
+    "name": "fixtures",
+    "scale": "short",
+    "scenario_counts": {
+      "backchannel": 1,
+      "background_speaker": 1,
+      "hesitation": 1,
+      "hesitation_commit": 1,
+      "interruption": 1,
+      "noise": 1,
+      "normal_turn": 1
+    },
+    "seed": 1234,
+    "shard_size": 8
+  },
+  "samples": [
+    {
+      "agent_flag_jitter_ms": 0,
+      "agent_runs": 1,
+      "background_db": -17.23,
+      "codec": null,
+      "duration_ms": 3700,
+      "events": [
+        {
+          "earliest_stop_ms": 1929,
+          "evidence_ms": 297,
+          "onset_ms": 1632,
+          "world": "truncated"
+        }
+      ],
+      "id": "fixtures-interruption-0000",
+      "noise_db": -17.123,
+      "pair_id": null,
+      "rates": {
+        "agent": 170,
+        "background": 160,
+        "primary_user": 165
+      },
+      "scenario": "interruption",
+      "shared_prefix_ms": null,
+      "snr_db": 0.211,
+      "split": "train",
+      "voices": {
+        "agent": "en-gb-x-rp",
+        "background": "en-gb-x-gbclan",
+        "primary_user": "en-gb"
+      },
+      "world": "truncated"
+    },
+    {
+      "agent_flag_jitter_ms": 0,
+      "agent_runs": 1,
+      "background_db": -14.544,
+      "codec": null,
+      "duration_ms": 2950,
+      "events": [],
+      "id": "fixtures-backchannel-0000",
+      "noise_db": -19.073,
+      "pair_id": null,
+      "rates": {
+        "agent": 150,
+        "background": 155,
+        "primary_user": 160
+      },
+      "scenario": "backchannel",
+      "shared_prefix_ms": null,
+      "snr_db": -5.894,
+      "split": "val",
+      "voices": {
+        "agent": "en-gb",
+        "background": "en-gb-x-gbcwmd",
+        "primary_user": "en-gb-x-rp"
+      },
+      "world": null
+    },
+    {
+      "agent_flag_jitter_ms": 0,
+      "agent_runs": 1,
+      "background_db": -16.103,
+      "codec": {
+        "bits": 8,
+        "variant": "narrowband_mulaw"
+      },
+      "duration_ms": 4050,
+      "events": [],
+      "id": "fixtures-normal_turn-0000",
+      "noise_db": -17.92,
+      "pair_id": null,
+      "rates": {
+        "agent": 170,
+        "background": 170,
+        "primary_user": 165
+      },
+      "scenario": "normal_turn",
+      "shared_prefix_ms": null,
+      "snr_db": -3.987,
+      "split": "test",
+      "voices": {
+        "agent": "en-us",
+        "background": "en-gb-x-gbclan",
+        "primary_user": "en-gb"
+      },
+      "world": null
+    },
+    {
+      "agent_flag_jitter_ms": -89,
+      "agent_runs": 1,
+      "background_db": -14.362,
+      "codec": {
+        "bits": 6,
+        "variant": "narrowband"
+      },
+      "duration_ms": 3300,
+      "events": [],
+      "id": "fixtures-noise-0000",
+      "noise_db": -13.787,
+      "pair_id": null,
+      "rates": {
+        "agent": 155,
+        "background": 175,
+        "primary_user": 165
+      },
+      "scenario": "noise",
+      "shared_prefix_ms": null,
+      "snr_db": -0.671,
+      "split": "test",
+      "voices": {
+        "agent": "en-gb-x-rp",
+        "background": "en-gb-x-gbclan",
+        "primary_user": "en-gb"
+      },
+      "world": null
+    },
+    {
+      "agent_flag_jitter_ms": 0,
+      "agent_runs": 1,
+      "background_db": -17.332,
+      "codec": {
+        "bits": 6,
+        "variant": "narrowband_low"
+      },
+      "duration_ms": 2450,
+      "events": [],
+      "id": "fixtures-background_speaker-0000",
+      "noise_db": -18.737,
+      "pair_id": null,
+      "rates": {
+        "agent": 175,
+        "background": 160,
+        "primary_user": 175
+      },
+      "scenario": "background_speaker",
+      "shared_prefix_ms": null,
+      "snr_db": -4.002,
+      "split": "test",
+      "voices": {
+        "agent": "en-us",
+        "background": "en-gb-x-gbclan",
+        "primary_user": "en-gb-x-rp"
+      },
+      "world": null
+    },
+    {
+      "agent_flag_jitter_ms": 0,
+      "agent_runs": 1,
+      "background_db": -13.894,
+      "codec": null,
+      "duration_ms": 3600,
+      "events": [],
+      "id": "fixtures-hesitation-0000",
+      "noise_db": -15.526,
+      "pair_id": null,
+      "rates": {
+        "agent": 170,
+        "background": 165,
+        "primary_user": 155
+      },
+      "scenario": "hesitation",
+      "shared_prefix_ms": null,
+      "snr_db": -3.388,
+      "split": "val",
+      "voices": {
+        "agent": "en-gb-scotland",
+        "background": "en-gb-x-gbclan",
+        "primary_user": "en-gb-x-rp"
+      },
+      "world": null
+    },
+    {
+      "agent_flag_jitter_ms": 0,
+      "agent_runs": 1,
+      "background_db": -13.344,
+      "codec": null,
+      "duration_ms": 12650,
+      "events": [],
+      "id": "fixtures-hespair-0000-hes",
+      "noise_db": -13.605,
+      "pair_id": "fixtures-hespair-0000",
+      "rates": {
+        "agent": 165,
+        "background": 150,
+        "primary_user": 150
+      },
+      "scenario": "hesitation",
+      "shared_prefix_ms": 2829,
+      "snr_db": 0.694,
+      "split": "test",
+      "voices": {
+        "agent": "en-gb-scotland",
+        "background": "en-gb-x-gbcwmd",
+        "primary_user": "en-gb"
+      },
+      "world": null
+    },
+    {
+      "agent_flag_jitter_ms": 68,
+      "agent_runs": 1,
+      "background_db": -13.344,
+      "codec": null,
+      "duration_ms": 12650,
+      "events": [
+        {
+          "earliest_stop_ms": 10630,
+          "evidence_ms": 274,
+          "onset_ms": 10356,
+          "world": "truncated"
+        }
+      ],
+      "id": "fixtures-hespair-0000-commit",
+      "noise_db": -13.605,
+      "pair_id": "fixtures-hespair-0000",
+      "rates": {
+        "agent": 165,
+        "background": 150,
+        "primary_user": 150
+      },
+      "scenario": "hesitation_commit",
+      "shared_prefix_ms": 2829,
+      "snr_db": 0.694,
+      "split": "test",
+      "voices": {
+        "agent": "en-gb-scotland",
+        "background": "en-gb-x-gbcwmd",
+        "primary_user": "en-gb"
+      },
+      "world": "truncated"
+    }
+  ],
+  "shard_index": 0,
+  "shard_samples": 8,
+  "split": {
+    "augmentation_rng": "keyed on sample id (sha1) \u2014 never crosses the split",
+    "cell": "(voice_pair, template_slot)",
+    "codec_family": "eval-only degradation, applied to a drawn subset of eval samples",
+    "eval_only_template_slots": {
+      "agent": [
+        3,
+        4
+      ],
+      "backchannel": [
+        4,
+        5,
+        8,
+        10,
+        12
+      ],
+      "background": [
+        3
+      ],
+      "hesitation": [
+        3
+      ],
+      "user_interrupt": [
+        0,
+        2
+      ],
+      "user_turn": [
+        1,
+        3
+      ]
+    },
+    "eval_only_voice_pair_names": [
+      "en-gb-scotland+en-us",
+      "en-gb-scotland+en-gb",
+      "en-gb-x-rp+en-gb-scotland",
+      "en-us+en-gb"
+    ],
+    "eval_only_voice_pairs": [
+      3,
+      4,
+      8,
+      9
+    ],
+    "method": "cell-hash",
+    "note": "cells containing any held-out voice pair or template slot are hash-assigned to val/test (50/50); other cells go to train. Realized split masses are reported in split_counts. Contract note: the ~30% pair holdout and ~30% per-class slot holdout force >=51% of cells into val+test, so realized masses are ~33/33/33 rather than 70/15/15 - the leakage-prevention holdouts take precedence and the masses are reported, not assumed.",
+    "salt": "fixtures|1234",
+    "seed_ranges": {
+      "eval": [
+        1000000,
+        2000000
+      ],
+      "train": [
+        0,
+        1000000
+      ]
+    }
+  }
+}

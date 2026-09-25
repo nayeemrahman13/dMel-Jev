@@ -1,0 +1,17 @@
+# dmel shared dependency pins (minimums) — contract v1.
+#
+# Created by the data PR; READ-ONLY for every other dmel area. All areas
+# install from this file (-c ../constraints.txt from their requirements.txt)
+# so arms train on comparable versions and the determinism claim holds
+# across sandboxes.
+#
+# Verified in the data sandbox: numpy 2.3.5, pandas 2.2.3, pyarrow 25.0.1.
+# torch / onnxruntime are not installed there (no GPU / no Silero use in the
+# data engine) — minimums below are the lowest versions the models and
+# baselines areas may assume; bump upward, never downward.
+
+numpy>=2.0
+pandas>=2.0
+pyarrow>=14.0
+torch>=2.0
+onnxruntime>=1.17

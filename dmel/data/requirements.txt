@@ -1,0 +1,9 @@
+# dmel.data engine dependencies. Version floors come from the shared pin
+# file (contract v1) — read-only for all areas.
+-c ../constraints.txt
+
+numpy
+pyarrow
+# espeak-ng adapter WAV loading (dmel.runtime.audio, vendored)
+soundfile>=0.12
+pytest
