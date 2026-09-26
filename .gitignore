@@ -22,3 +22,4 @@ runs/
 # python -m dmel.data.generate --preset <name>; fixtures ARE committed)
 data/pilot/
 data/main/
+data/pilot-val/

@@ -278,7 +278,12 @@ def train(
     device: torch.device | None = None,
     max_train_batches: int | None = None,
     num_workers: int | None = None,
+    seeds_list: list[int] | None = None,
 ) -> dict:
+    """Train ``optim_config.seeds`` seeds (default 0..n-1) or exactly the
+    seeds in ``seeds_list`` when given — used by the Modal runner to train
+    one (width, seed) per parallel worker while sharing every other
+    hyperparameter."""
     device = device or torch.device("cpu")
     grouped = group_by_split(scan_samples(data_config.root))
     train_samples, val_samples = grouped["train"], grouped["val"]
@@ -291,6 +296,7 @@ def train(
         )
 
     pos_weight = pos_weight_from_rates(train_positive_rates(train_samples))
+    seed_iterable = seeds_list if seeds_list is not None else range(optim_config.seeds)
     seed_summaries = [
         train_one_seed(
             model_config,
@@ -304,7 +310,7 @@ def train(
             max_train_batches=max_train_batches,
             num_workers=num_workers,
         )
-        for seed in range(optim_config.seeds)
+        for seed in seed_iterable
     ]
 
     val_totals = [entry["best_val_total"] for entry in seed_summaries]
