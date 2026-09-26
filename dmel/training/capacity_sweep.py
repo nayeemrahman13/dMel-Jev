@@ -121,10 +121,15 @@ def evaluate_checkpoint(
 
     selected = select_operating_point(rows, beta=stop_decision_beta)
     if selected is None:
-        raise ValueError(
-            f"{checkpoint}: no frontier row has a computable F-beta — "
-            "the policy never emitted a STOP on the sweep"
+        degenerate = write_degenerate_metrics(
+            rows, out_dir, checkpoint, stop_decision_beta=stop_decision_beta
         )
+        if degenerate is None:
+            raise ValueError(
+                f"{checkpoint}: no frontier row has a computable F-beta, but the "
+                "frontier is not a never-stop case — refusing to pick an operating point"
+            )
+        return degenerate
     threshold = selected["threshold_ms"]  # sweep keys are generic; here: stop probability
 
     model, _ = load_model_from_checkpoint(checkpoint)
@@ -149,6 +154,43 @@ def evaluate_checkpoint(
         "params": model.num_parameters(),
         "selected_stop_threshold": threshold,
         "metrics": result.metrics,
+    }
+
+
+def write_degenerate_metrics(
+    rows: list[dict],
+    out_dir: Path,
+    checkpoint: Path,
+    *,
+    stop_decision_beta: float = 2.0,
+) -> dict | None:
+    """Materialize metrics for a never-stop checkpoint from its sweep rows.
+
+    select_operating_point returns None only when no row has a computable
+    F-beta; with zero predicted stops every row is identical, so the row
+    metrics ARE the run metrics — copied verbatim, not recomputed. Returns
+    None (writes nothing) when the frontier is not a never-stop case.
+    """
+    if any(r["metrics"]["totals"]["predicted_stop_frames"] != 0 for r in rows):
+        return None
+    model, _ = load_model_from_checkpoint(checkpoint)
+    metrics = dict(rows[0]["metrics"])
+    metrics["meta"] = {
+        "checkpoint": str(checkpoint),
+        "selected_stop_threshold": None,
+        "selection": (
+            f"no operating point: zero predicted stop frames at every sweep "
+            f"threshold; stop-decision F-beta (beta={stop_decision_beta}) undefined"
+        ),
+        "params": model.num_parameters(),
+        "no_operating_point": True,
+    }
+    (out_dir / "metrics.json").write_text(json.dumps(metrics, indent=2, ensure_ascii=False))
+    return {
+        "checkpoint": str(checkpoint),
+        "params": model.num_parameters(),
+        "selected_stop_threshold": None,
+        "metrics": metrics,
     }
 
 
@@ -194,7 +236,16 @@ def aggregate(widths: list[int], seeds: list[int], out_dir: Path) -> dict:
             "params": params[0],
             "seeds": sorted(runs),
             "selected_stop_thresholds": sorted(
-                {run["meta"]["selected_stop_threshold"] for run in runs.values()}
+                {
+                    t
+                    for run in runs.values()
+                    if (t := run["meta"]["selected_stop_threshold"]) is not None
+                }
+            ),
+            "no_operating_point_seeds": sum(
+                1
+                for run in runs.values()
+                if run["meta"]["selected_stop_threshold"] is None
             ),
             "interruption_recall": _mean_sd(
                 [_rate(m, "interruptions", "recall") for m in metrics]
@@ -334,6 +385,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("--out-dir", default="runs/capacity_sweep/eval")
     parser.add_argument("--aggregate", action="store_true", help="pool metrics.json into mean ± sd")
+    parser.add_argument(
+        "--rows-to-degenerate-metrics",
+        type=Path,
+        metavar="RUN_DIR",
+        help="materialize a never-stop run's metrics.json from its persisted "
+        "sweep.json (for runs that failed before the degenerate path existed)",
+    )
     parser.add_argument("--keep-split-dir", action="store_true", help="keep the symlinked split tree")
     parser.add_argument(
         "--reuse-split-dir",
@@ -345,6 +403,20 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     out_dir = Path(args.out_dir)
+    if args.rows_to_degenerate_metrics is not None:
+        run_dir = args.rows_to_degenerate_metrics
+        rows = json.loads((run_dir / "sweep.json").read_text())
+        checkpoint = Path(rows[0]["metrics"]["meta"]["checkpoint"])
+        degenerate = write_degenerate_metrics(rows, run_dir, checkpoint)
+        if degenerate is None:
+            print(f"{run_dir}: frontier is not a never-stop case; nothing written")
+            return 1
+        print(
+            f"{run_dir}: wrote degenerate metrics (no operating point, "
+            f"params {degenerate['params']:,})"
+        )
+        return 0
+
     if args.aggregate:
         aggregate(args.widths, args.seeds, out_dir)
         print(f"wrote {out_dir / 'aggregate.json'} and {out_dir / 'aggregate_table.md'}")
