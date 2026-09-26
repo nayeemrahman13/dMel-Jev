@@ -1,0 +1,14 @@
+# dmel/demo area dependencies (contract: declare deps area-locally).
+#
+# Install together with the shared pin file:
+#
+#   pip install -r dmel/demo/requirements.txt -c dmel/constraints.txt
+#
+# The demo reuses the repo's core stack (numpy, torch, onnxruntime — for the
+# learned arm and arm A respectively) already pinned by the other areas'
+# requirements; this file adds only what the LIVE audio loop needs beyond
+# them. Audio I/O is imported lazily by dmel/demo/mic.py + player.py, so the
+# test suite and --list-devices-free paths work without PortAudio installed.
+sounddevice>=0.4
+# test-only
+pytest>=8.0
