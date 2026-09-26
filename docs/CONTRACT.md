@@ -1,4 +1,4 @@
-# dMel-Jev POC — data & interface contract v1
+# dMel-Jev POC — data & interface contract v1.1
 
 Fixed contract for the dMel barge-in POC in this repo (`nayeemrahman13/dMel-Jev`).
 Originally written for parallel implementation in the upstream `nayeemrahman13/JeVAD`
@@ -8,6 +8,8 @@ repo's layout (see the Transplant note at the end).
 Turn-end detection / turn commit is explicitly OUT of scope for V1.
 
 **v1 changelog:** all amendments from the red-team review (art_Sqpz5pq7 — findings C1–C4, M1–M8, m1–m3) are adopted. Lines tagged **[v1]** changed or are new. Supersedes v0 everywhere the two differ; re-read this doc before finalizing any PR.
+
+**v1.1 changelog:** capacity-sweep decision recorded (`docs/capacity_sweep.md`, merged 2026-09-26 as `aa78983`). Lines tagged **[v1.1]** changed or are new: the §Models parameter band is superseded by the binding <10 ms single-core CPU p95 sizing constraint (parameter count is descriptive, not a target — measured sizes: LSTM 1.61M, transformer 4.12M), and a new Capacity sweep record section documents the comparison and the RETAIN 6×256 decision. Cadence, label schema, split rules, metrics, and scenario mix are unchanged.
 
 ## Ownership map (parallel PRs — never touch another area's files)
 
@@ -126,9 +128,26 @@ Called once per 50 ms. Policies may latch `STOP_TTS` until `agent_speaking` goes
 
 - Heads: `action(2)` + aux binary heads `speech_present`, `primary_user`, `backchannel`, `interrupt_intent`.
 - Loss: `L_action + 0.3·L_interrupt + 0.2·L_backchannel + 0.1·L_speech + 0.1·L_primary_user` (config-driven; action dominates). **[v1]** Per-head class weighting is specified, not optional: BCE-with-logits `pos_weight` per head from train-split positive rates (capped at 20). The training summary reports per-head train positive rates. A fixture smoke test asserts action-head recall > 0 on the committed fixtures — class collapse must fail CI, not the pilot run.
-- Architectures: (1) 2-layer LSTM; (2) causal transformer ~6 layers × 256 hidden (10–30 M params). Input: dMel token embeddings + `agent_speaking` scalar; plumbing flags reserved for `speaker_similarity` / agent-stem dMel (ablation arms D/E). **[v1]** The model-input tensor contains ONLY tokens plus flags — never label columns (belt-and-suspenders behind the leakage linter).
-- Inference budget: one step (window recompute over ≤40 frames) < 10 ms on a CPU-class core.
+- Architectures **[v1.1]**: (1) 2-layer LSTM (1.61M params as built); (2) causal transformer ~6 layers × 256 hidden (4.12M params as built — 4,115,846 exactly, per `docs/dmel_geometry.md`). Input: dMel token embeddings + `agent_speaking` scalar; plumbing flags reserved for `speaker_similarity` / agent-stem dMel (ablation arms D/E). **[v1]** The model-input tensor contains ONLY tokens plus flags — never label columns (belt-and-suspenders behind the leakage linter).
+- Inference budget (binding sizing constraint) **[v1.1]**: one step (window recompute over ≤40 frames) < 10 ms single-core CPU p95 per 50 ms decision step. Parameter count is descriptive, not a target. The superseded v0 parameter band was derived under a since-replaced 20-bin-group token interpretation; under the per-bin tokenizer (`docs/dmel_geometry.md`) a flattened per-bin input projection would be ~26M params and miss this limit. Sizing is settled by the capacity sweep — see Capacity sweep record.
 - Training: torch, AdamW, config.yaml, checkpointing. **[v1]** Every learned arm trains ≥3 seeds on the pilot; the report gives mean ± sd. Modal GPU runner `dmel/training/train_modal.py` for real runs; CPU smoke on fixtures when no Modal creds are in the env. Shuffled-label control test lives here (see Splits).
+
+## Capacity sweep record **[v1.1 — new]**
+
+Full report: `docs/capacity_sweep.md` (committed eval outputs under `reports/capacity_sweep/eval/`; merged to main as `aa78983` on 2026-09-26). Recorded here because it settles the §Models sizing constraint above.
+
+- **Question:** does transformer width improve pilot-corpus policy quality while meeting the step budget? Arms: 6×256 / 6×384 / 6×512, seeds 0/1/2 — nine fresh Modal L4 runs, nothing re-rolled.
+- **Protocol invariants (identical across all nine runs):** frozen dMel frontend per `docs/dmel_geometry.md` (80 mel bins → 5 subframes per 50 ms step → 400 IDs, shared 16-level codebook, mean-pooled embedding + `agent_speaking`); deterministic pilot corpus (840 samples / 3.12 h), train split only with selection on validation, test untouched; 5 epochs, batch 32, AdamW 3e-4 (wd 0.01, grad-clip 1.0); action-dominant loss with 0.3/0.2/0.1/0.1 aux weights and per-head BCE pos_weight from train-split positive rates (cap 20); stop threshold swept on validation over the 0.30–0.70 grid, ONE point per checkpoint by max F-beta (β=2).
+- **Results (validation, mean ± sd over 3 seeds):**
+
+| Arm | params | CPU p95 / step (<10 ms budget) | First in-window STOP recall |
+|---|---|---|---|
+| 6×256 | 4,115,846 | **6.21 ms** — only width meeting the budget | 0.347 ± 0.159 |
+| 6×384 | 9,000,006 | 17.55 ms — 1.8× over | 0.396 ± 0.178 (within one seed sd of 6×256) |
+| 6×512 | 15,768,326 | 28.35 ms — 2.8× over | 0.165 ± 0.286 |
+
+- **Degenerate-collapse handling:** 6×512 seeds 1 and 2 emitted zero predicted stop frames at every swept threshold (never-stop collapse), so no operating point exists. The harness persists those rows with `no_operating_point: true` and `selected_stop_threshold: null` rather than inventing one; the aggregate carries `no_operating_point_seeds` per width. All nonzero 6×512 numbers ride on the single surviving seed.
+- **Decision (orchestrator, per the pre-agreed keep/replace rule):** **RETAIN the 6×256, 4,115,846-parameter transformer** as the V1 architecture — width buys no measurable quality on this corpus (6×384 within seed noise of 6×256; 6×512 unstable) and both wider arms miss the latency limit. No token flattening; the 50 ms cadence is unchanged. Pilot numbers remain a pipeline sign-of-life (see Eval); architecture ranking re-opens only on the main corpus.
 
 ## Baselines (`dmel/baselines`)
 
