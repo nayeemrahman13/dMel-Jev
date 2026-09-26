@@ -173,6 +173,7 @@ def write_degenerate_metrics(
     """
     if any(r["metrics"]["totals"]["predicted_stop_frames"] != 0 for r in rows):
         return None
+    out_dir.mkdir(parents=True, exist_ok=True)
     model, _ = load_model_from_checkpoint(checkpoint)
     metrics = dict(rows[0]["metrics"])
     metrics["meta"] = {
