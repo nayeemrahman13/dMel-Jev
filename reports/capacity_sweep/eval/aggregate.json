@@ -1,0 +1,626 @@
+{
+  "widths": {
+    "256": {
+      "params": 4115846,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "selected_stop_thresholds": [
+        0.3,
+        0.5
+      ],
+      "no_operating_point_seeds": 0,
+      "interruption_recall": {
+        "mean": 0.34736842105263155,
+        "sd": 0.15929206263601636,
+        "n": 3
+      },
+      "never_stopped_rate": {
+        "mean": 0.6526315789473683,
+        "sd": 0.15929206263601642,
+        "n": 3
+      },
+      "premature_during_overlap_rate": {
+        "mean": 0.028070175438596492,
+        "sd": 0.026490647141300876,
+        "n": 3
+      },
+      "premature_during_non_overlap_rate": {
+        "mean": 0.08421052631578947,
+        "sd": 0.031578947368421054,
+        "n": 3
+      },
+      "decision_latency_median_ms": {
+        "mean": null,
+        "sd": null,
+        "n": 0
+      },
+      "decision_latency_p95_ms": {
+        "mean": null,
+        "sd": null,
+        "n": 0
+      },
+      "decision_latency_n_handled": {
+        "mean": 33.0,
+        "sd": 15.132745950421556,
+        "n": 3
+      },
+      "decision_latency_n_censored": {
+        "mean": 62.0,
+        "sd": 15.132745950421556,
+        "n": 3
+      },
+      "decision_latency_median_censored_seeds": 3,
+      "stop_decision_fbeta": {
+        "mean": 0.2845347387816866,
+        "sd": 0.07951472555060295,
+        "n": 3
+      },
+      "false_stops_total": {
+        "mean": 4035.0,
+        "sd": 1279.605798673951,
+        "n": 3
+      },
+      "false_stops_by_scenario": {
+        "backchannel": {
+          "false_stop_rate": {
+            "mean": 0.2170542635658915,
+            "sd": 0.05852584833543216,
+            "n": 3
+          },
+          "segments": {
+            "mean": 43.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 9.333333333333334,
+            "sd": 2.516611478423583,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 389.3333333333333,
+            "sd": 148.05516989735054,
+            "n": 3
+          }
+        },
+        "hesitation": {
+          "false_stop_rate": {
+            "mean": 0.5555555555555556,
+            "sd": 0.06696979695133995,
+            "n": 3
+          },
+          "segments": {
+            "mean": 48.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 26.666666666666668,
+            "sd": 3.2145502536643185,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 1397.0,
+            "sd": 255.48972582082436,
+            "n": 3
+          }
+        },
+        "hesitation_commit": {
+          "false_stop_rate": {
+            "mean": 0.5789473684210525,
+            "sd": 0.09116056881941459,
+            "n": 3
+          },
+          "segments": {
+            "mean": 19.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 11.0,
+            "sd": 1.7320508075688772,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 589.0,
+            "sd": 157.12097250208197,
+            "n": 3
+          }
+        },
+        "noise": {
+          "false_stop_rate": {
+            "mean": 0.14705882352941177,
+            "sd": 0.050942670810849335,
+            "n": 3
+          },
+          "segments": {
+            "mean": 34.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 5.0,
+            "sd": 1.7320508075688772,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 518.0,
+            "sd": 323.541342026023,
+            "n": 3
+          }
+        },
+        "background_speaker": {
+          "false_stop_rate": {
+            "mean": 0.2333333333333333,
+            "sd": 0.11547005383792515,
+            "n": 3
+          },
+          "segments": {
+            "mean": 30.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 7.0,
+            "sd": 3.4641016151377544,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 377.6666666666667,
+            "sd": 217.5714442047332,
+            "n": 3
+          }
+        }
+      },
+      "stops_while_agent_silent": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      }
+    },
+    "384": {
+      "params": 9000006,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "selected_stop_thresholds": [
+        0.3,
+        0.4
+      ],
+      "no_operating_point_seeds": 0,
+      "interruption_recall": {
+        "mean": 0.3964912280701755,
+        "sd": 0.17811986170522184,
+        "n": 3
+      },
+      "never_stopped_rate": {
+        "mean": 0.6035087719298246,
+        "sd": 0.17811986170522184,
+        "n": 3
+      },
+      "premature_during_overlap_rate": {
+        "mean": 0.021052631578947368,
+        "sd": 0.01823211376388292,
+        "n": 3
+      },
+      "premature_during_non_overlap_rate": {
+        "mean": 0.11228070175438597,
+        "sd": 0.05192508276122366,
+        "n": 3
+      },
+      "decision_latency_median_ms": {
+        "mean": 381.0,
+        "sd": 0.0,
+        "n": 1
+      },
+      "decision_latency_p95_ms": {
+        "mean": null,
+        "sd": null,
+        "n": 0
+      },
+      "decision_latency_n_handled": {
+        "mean": 37.666666666666664,
+        "sd": 16.921386861996073,
+        "n": 3
+      },
+      "decision_latency_n_censored": {
+        "mean": 57.333333333333336,
+        "sd": 16.921386861996073,
+        "n": 3
+      },
+      "decision_latency_median_censored_seeds": 2,
+      "stop_decision_fbeta": {
+        "mean": 0.29362346614589135,
+        "sd": 0.06710523331371815,
+        "n": 3
+      },
+      "false_stops_total": {
+        "mean": 4837.0,
+        "sd": 1858.9650346362084,
+        "n": 3
+      },
+      "false_stops_by_scenario": {
+        "backchannel": {
+          "false_stop_rate": {
+            "mean": 0.2868217054263566,
+            "sd": 0.11705169667086432,
+            "n": 3
+          },
+          "segments": {
+            "mean": 43.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 12.333333333333334,
+            "sd": 5.033222956847166,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 502.3333333333333,
+            "sd": 247.27784642651136,
+            "n": 3
+          }
+        },
+        "hesitation": {
+          "false_stop_rate": {
+            "mean": 0.5694444444444444,
+            "sd": 0.060140653040585995,
+            "n": 3
+          },
+          "segments": {
+            "mean": 48.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 27.333333333333332,
+            "sd": 2.8867513459481287,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 1601.3333333333333,
+            "sd": 375.9206476549716,
+            "n": 3
+          }
+        },
+        "hesitation_commit": {
+          "false_stop_rate": {
+            "mean": 0.5964912280701754,
+            "sd": 0.06077371254627639,
+            "n": 3
+          },
+          "segments": {
+            "mean": 19.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 11.333333333333334,
+            "sd": 1.1547005383792515,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 672.3333333333334,
+            "sd": 173.0443103177141,
+            "n": 3
+          }
+        },
+        "noise": {
+          "false_stop_rate": {
+            "mean": 0.1568627450980392,
+            "sd": 0.03396178054056623,
+            "n": 3
+          },
+          "segments": {
+            "mean": 34.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 5.333333333333333,
+            "sd": 1.1547005383792515,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 655.0,
+            "sd": 393.96954196993454,
+            "n": 3
+          }
+        },
+        "background_speaker": {
+          "false_stop_rate": {
+            "mean": 0.2888888888888889,
+            "sd": 0.20367003088692623,
+            "n": 3
+          },
+          "segments": {
+            "mean": 30.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 8.666666666666666,
+            "sd": 6.110100926607787,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 480.6666666666667,
+            "sd": 352.38094916344915,
+            "n": 3
+          }
+        }
+      },
+      "stops_while_agent_silent": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      }
+    },
+    "512": {
+      "params": 15768326,
+      "seeds": [
+        0,
+        1,
+        2
+      ],
+      "selected_stop_thresholds": [
+        0.45
+      ],
+      "no_operating_point_seeds": 2,
+      "interruption_recall": {
+        "mean": 0.16491228070175437,
+        "sd": 0.28563644896749907,
+        "n": 3
+      },
+      "never_stopped_rate": {
+        "mean": 0.8350877192982455,
+        "sd": 0.28563644896749907,
+        "n": 3
+      },
+      "premature_during_overlap_rate": {
+        "mean": 0.031578947368421054,
+        "sd": 0.054696341291648756,
+        "n": 3
+      },
+      "premature_during_non_overlap_rate": {
+        "mean": 0.042105263157894736,
+        "sd": 0.07292845505553168,
+        "n": 3
+      },
+      "decision_latency_median_ms": {
+        "mean": null,
+        "sd": null,
+        "n": 0
+      },
+      "decision_latency_p95_ms": {
+        "mean": null,
+        "sd": null,
+        "n": 0
+      },
+      "decision_latency_n_handled": {
+        "mean": 15.666666666666666,
+        "sd": 27.135462651912412,
+        "n": 3
+      },
+      "decision_latency_n_censored": {
+        "mean": 79.33333333333333,
+        "sd": 27.135462651912412,
+        "n": 3
+      },
+      "decision_latency_median_censored_seeds": 3,
+      "stop_decision_fbeta": {
+        "mean": 0.36021105323682606,
+        "sd": 0.0,
+        "n": 1
+      },
+      "false_stops_total": {
+        "mean": 1637.0,
+        "sd": 2835.3671719902522,
+        "n": 3
+      },
+      "false_stops_by_scenario": {
+        "backchannel": {
+          "false_stop_rate": {
+            "mean": 0.08527131782945736,
+            "sd": 0.14769425490897403,
+            "n": 3
+          },
+          "segments": {
+            "mean": 43.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 3.6666666666666665,
+            "sd": 6.3508529610858835,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 171.33333333333334,
+            "sd": 296.7580383634676,
+            "n": 3
+          }
+        },
+        "hesitation": {
+          "false_stop_rate": {
+            "mean": 0.19444444444444445,
+            "sd": 0.3367876570272817,
+            "n": 3
+          },
+          "segments": {
+            "mean": 48.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 9.333333333333334,
+            "sd": 16.165807537309522,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 543.6666666666666,
+            "sd": 941.6582890482796,
+            "n": 3
+          }
+        },
+        "hesitation_commit": {
+          "false_stop_rate": {
+            "mean": 0.21052631578947367,
+            "sd": 0.36464227527765836,
+            "n": 3
+          },
+          "segments": {
+            "mean": 19.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 4.0,
+            "sd": 6.928203230275509,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 250.66666666666666,
+            "sd": 434.1674024305986,
+            "n": 3
+          }
+        },
+        "noise": {
+          "false_stop_rate": {
+            "mean": 0.05882352941176471,
+            "sd": 0.10188534162169867,
+            "n": 3
+          },
+          "segments": {
+            "mean": 34.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 2.0,
+            "sd": 3.4641016151377544,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 234.66666666666666,
+            "sd": 406.45458950949654,
+            "n": 3
+          }
+        },
+        "background_speaker": {
+          "false_stop_rate": {
+            "mean": 0.09999999999999999,
+            "sd": 0.17320508075688773,
+            "n": 3
+          },
+          "segments": {
+            "mean": 30.0,
+            "sd": 0.0,
+            "n": 3
+          },
+          "segments_with_false_stop": {
+            "mean": 3.0,
+            "sd": 5.196152422706632,
+            "n": 3
+          },
+          "false_stop_frames": {
+            "mean": 145.66666666666666,
+            "sd": 252.30206763586645,
+            "n": 3
+          }
+        }
+      },
+      "stops_while_agent_silent": {
+        "mean": 0.0,
+        "sd": 0.0,
+        "n": 3
+      }
+    }
+  },
+  "per_run": {
+    "256": {
+      "0": {
+        "params": 4115846,
+        "selected_stop_threshold": 0.5,
+        "interruption_recall": 0.4,
+        "stop_decision_fbeta": 0.3325623773479114,
+        "decision_latency_median_ms": null,
+        "decision_latency_p95_ms": null
+      },
+      "1": {
+        "params": 4115846,
+        "selected_stop_threshold": 0.3,
+        "interruption_recall": 0.47368421052631576,
+        "stop_decision_fbeta": 0.3282896514455552,
+        "decision_latency_median_ms": null,
+        "decision_latency_p95_ms": null
+      },
+      "2": {
+        "params": 4115846,
+        "selected_stop_threshold": 0.3,
+        "interruption_recall": 0.16842105263157894,
+        "stop_decision_fbeta": 0.19275218755159318,
+        "decision_latency_median_ms": null,
+        "decision_latency_p95_ms": null
+      }
+    },
+    "384": {
+      "0": {
+        "params": 9000006,
+        "selected_stop_threshold": 0.3,
+        "interruption_recall": 0.4421052631578947,
+        "stop_decision_fbeta": 0.32108921624896375,
+        "decision_latency_median_ms": null,
+        "decision_latency_p95_ms": null
+      },
+      "1": {
+        "params": 9000006,
+        "selected_stop_threshold": 0.3,
+        "interruption_recall": 0.2,
+        "stop_decision_fbeta": 0.2171423897930809,
+        "decision_latency_median_ms": null,
+        "decision_latency_p95_ms": null
+      },
+      "2": {
+        "params": 9000006,
+        "selected_stop_threshold": 0.4,
+        "interruption_recall": 0.5473684210526316,
+        "stop_decision_fbeta": 0.34263879239562933,
+        "decision_latency_median_ms": 381.0,
+        "decision_latency_p95_ms": null
+      }
+    },
+    "512": {
+      "0": {
+        "params": 15768326,
+        "selected_stop_threshold": 0.45,
+        "interruption_recall": 0.49473684210526314,
+        "stop_decision_fbeta": 0.36021105323682606,
+        "decision_latency_median_ms": null,
+        "decision_latency_p95_ms": null
+      },
+      "1": {
+        "params": 15768326,
+        "selected_stop_threshold": null,
+        "interruption_recall": 0.0,
+        "stop_decision_fbeta": null,
+        "decision_latency_median_ms": null,
+        "decision_latency_p95_ms": null
+      },
+      "2": {
+        "params": 15768326,
+        "selected_stop_threshold": null,
+        "interruption_recall": 0.0,
+        "stop_decision_fbeta": null,
+        "decision_latency_median_ms": null,
+        "decision_latency_p95_ms": null
+      }
+    }
+  }
+}
